@@ -37,3 +37,13 @@ gulp.task('htmlnest', gulp.series(
   gulp.series('html', 'html')
 ));
 
+// 实现从 src/assets/下所有的文件都拷贝到  dist/下面的assets
+function copy() {
+  // task方法： 接受一个cb回调函数，在任务结束的时候执行以下cb回调函数。
+  // 方法：可以返回一个流
+  // 方法： 返回一个promise也是可以。
+  return gulp.src(['src/assets/**/*.*', 'src/lib/**/*.*'], { base: 'src/'}) // node 一个流 pipe
+  .pipe(gulp.dest('dist/')); // gulp.dest：把所有文件保存到xxx地方。
+}
+
+gulp.task(copy);
