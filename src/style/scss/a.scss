@@ -1,0 +1,9 @@
+$w: 30px;
+$c: red;
+
+.box {
+  width: $w;
+  height: $w;
+  background-color: $c;
+  display: flex;
+}

@@ -1,4 +1,5 @@
 const gulp = require('gulp');
+const sass = require('gulp-sass');
 
 // 第一个参数： 任务的名字， 第二个参数是具体要执行的任务。
 gulp.task('default', function(cb) {
@@ -15,10 +16,11 @@ function html(cb) {  // 接收一个回调函数作为参数，此回调函数�
 gulp.task(html);
 
 // 可以指定当前的任务（函数任务）的名字
-
-function style(cb) {
-  console.log('style is running ....');
-  cb();
+// 1. 进行样式的预处理（sass → css）
+function style() {
+  return gulp.src(['./src/style/**/*.{scss,css}'])
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('./src/style/'));
 }
 style.displayName = 'style:pro'; // 可以指定非函数名字的任务名
 gulp.task(style);
