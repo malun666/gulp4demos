@@ -17,6 +17,7 @@ gulp.task(html);
 
 // 可以指定当前的任务（函数任务）的名字
 // 1. 进行样式的预处理（sass → css）
+// 2. 代码进行合并
 function style() {
   return gulp.src(['./src/style/**/*.{scss,css}'])
     .pipe(sass().on('error', sass.logError))
