@@ -6,7 +6,11 @@
   "dependencies": {},
   "devDependencies": {
     "gulp": "^4.0.1",
+    "gulp-autoprefixer": "^6.1.0",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-concat": "^2.6.1",
     "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
     "node-sass": "^4.11.0"
   },
   "scripts": {

@@ -1,0 +1,11 @@
+.box {
+  width: 30px;
+  height: 30px;
+  background-color: red;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex; 
+}
+
+/*# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNjc3MvYS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUdBO0VBQ0UsV0FKTTtFQUtOLFlBTE07RUFNTixxQkFMSztFQU1MLG9CQUFhO0VBQWIscUJBQWE7RUFBYixvQkFBYTtFQUFiLGFBQWEsRUFBQSIsImZpbGUiOiJtYWluLmNzcyIsInNvdXJjZXNDb250ZW50IjpbIiR3OiAzMHB4O1xuJGM6IHJlZDtcblxuLmJveCB7XG4gIHdpZHRoOiAkdztcbiAgaGVpZ2h0OiAkdztcbiAgYmFja2dyb3VuZC1jb2xvcjogJGM7XG4gIGRpc3BsYXk6IGZsZXg7XG59Il19 */
