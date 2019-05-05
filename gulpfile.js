@@ -34,8 +34,6 @@ function html() {  // 接收一个回调函数作为参数，此回调函数执�
   .pipe(gulp.dest('./dist/'))
 }
 
-gulp.task(html);
-
 // 可以指定当前的任务（函数任务）的名字， 开发环境使用的版本
 // 1. 进行样式的预处理（sass → css）
 // 2. 代码进行合并, 排除掉已经合并的main.css文件。
@@ -55,8 +53,6 @@ function style() {
     .pipe(sourcemap.write())
     .pipe(gulp.dest('./src/style/'));
 }
-style.displayName = 'style:dev'; // 可以指定非函数名字的任务名
-gulp.task(style);
 
 // 生产环境使用的版本
 // 6. 给main.css文件打上版本号。
@@ -81,24 +77,13 @@ function stylePro() {
 
 // 清理dist目录下的所有的css文件 和html文件
 function cleanDist() { 
-  return gulp.src(['./dist/style/*.css', './dist/index.html', './dist/view/**/*.html', {read: false})
-    .pipe(clean())
+  return gulp.src(['./dist/style/*.css', './dist/index.html', './dist/view/**/*.html'], {read: false})
+    .pipe(clean());
 }
-// gulp.task("stylePro", gulp.series(cleanDist, stylePro));
 
 // 注册一个任务， 串行的执行 html  style:pro 
 // gulp.series帮助我们顺序（串行）执行多个任务的能力。
-gulp.task('htmldist', gulp.series("stylePro", html));
-
 // 注册一个任务， 并行执行多个任务
-gulp.task('htmlstyle_para', gulp.parallel(html, 'style:dev'));
-
-gulp.task('htmlnest', gulp.series(
-  html, 
-  gulp.parallel(html, 'style:dev'), // 并行执行多个任务。参数可以是任意多个，可以是方法名字，可以是任务名字。
-  gulp.series('html', 'html')
-));
-
 // 实现从 src/assets/下所有的文件都拷贝到  dist/下面的assets
 function copy() {
   // task方法： 接受一个cb回调函数，在任务结束的时候执行以下cb回调函数。
@@ -108,4 +93,10 @@ function copy() {
   .pipe(gulp.dest('dist/')); // gulp.dest：把所有文件保存到xxx地方。
 }
 
-gulp.task(copy);
+// 开发相关的任务。 
+// 1. 监听sass的变化，自动编译sass
+// 2. 自动执行打开浏览器，启动server
+// 3. 监听js变化。
+gulp.task('dev', function() {
+  gulp.watch(['./src/style/scss/**/*.scss', './src/style/css/**/*.css'], gulp.series(style))
+})
