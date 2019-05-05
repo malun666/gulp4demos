@@ -6,6 +6,8 @@ const autoprefixer = require('gulp-autoprefixer');
 const cleanCss = require('gulp-clean-css');
 const rev = require('gulp-rev');
 const revCollector = require('gulp-rev-collector');
+const clean = require('gulp-clean');
+const htmlmin = require('gulp-htmlmin');
 
 // 第一个参数： 任务的名字， 第二个参数是具体要执行的任务。
 gulp.task('default', function(cb) {
@@ -14,9 +16,22 @@ gulp.task('default', function(cb) {
 });
 
 // gulp4.0 注册一个任务的时候，直接可以把一个方法注册成为一个任务。
-function html(cb) {  // 接收一个回调函数作为参数，此回调函数执行后，告诉gulp当前任务执行完成。
-  console.log('html 任务执行了...');
-  cb(); // 告诉gulp，当前的任务执行完成。
+function html() {  // 接收一个回调函数作为参数，此回调函数执行后，告诉gulp当前任务执行完成。
+  // 把src目录下面html，复制到dist目录，替换css版本。js版本也得替换
+  // html进行压缩
+  return gulp.src(['./src/index.html', './src/view/**/*.html', './src/style/rev-manifest.json'], {base: './src/'})
+  .pipe(revCollector({replaceReved: true}))
+  .pipe(htmlmin({
+    removeComments: true, // 清除HTML注释
+    collapseWhitespace: true, // 压缩HTML
+    // collapseBooleanAttributes: true, //省略布尔属性的值 <input checked="true"/> ==> <input />
+    removeEmptyAttributes: true, // 删除所有空格作属性值 <input id="" /> ==> <input />
+    removeScriptTypeAttributes: true, // 删除<script>的type="text/javascript"
+    removeStyleLinkTypeAttributes: true, // 删除<style>和<link>的type="text/css"
+    minifyJS: true, // 压缩页面JS
+    minifyCSS: true // 压缩页面CSS
+  })) // 压缩html
+  .pipe(gulp.dest('./dist/'))
 }
 
 gulp.task(html);
@@ -63,13 +78,17 @@ function stylePro() {
     .pipe(rev.manifest())
     .pipe(gulp.dest('./src/style/')) // 把映射文件存到
 }
-gulp.task(stylePro);
 
-
+// 清理dist目录下的所有的css文件 和html文件
+function cleanDist() { 
+  return gulp.src(['./dist/style/*.css', './dist/index.html', './dist/view/**/*.html', {read: false})
+    .pipe(clean())
+}
+// gulp.task("stylePro", gulp.series(cleanDist, stylePro));
 
 // 注册一个任务， 串行的执行 html  style:pro 
 // gulp.series帮助我们顺序（串行）执行多个任务的能力。
-gulp.task('htmlstyle', gulp.series(html, 'style:dev'));
+gulp.task('htmldist', gulp.series("stylePro", html));
 
 // 注册一个任务， 并行执行多个任务
 gulp.task('htmlstyle_para', gulp.parallel(html, 'style:dev'));
