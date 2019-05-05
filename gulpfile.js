@@ -8,12 +8,10 @@ const rev = require('gulp-rev');
 const revCollector = require('gulp-rev-collector');
 const clean = require('gulp-clean');
 const htmlmin = require('gulp-htmlmin');
+const imgagemin = require('gulp-imagemin');
 
 // 第一个参数： 任务的名字， 第二个参数是具体要执行的任务。
-gulp.task('default', function(cb) {
-  console.log('gulp is running ...');
-  cb();
-});
+gulp.task('default', gulp.series(imgMin));
 
 // gulp4.0 注册一个任务的时候，直接可以把一个方法注册成为一个任务。
 function html() {  // 接收一个回调函数作为参数，此回调函数执行后，告诉gulp当前任务执行完成。
@@ -82,15 +80,28 @@ function cleanDist() {
 }
 
 // 注册一个任务， 串行的执行 html  style:pro 
-// gulp.series帮助我们顺序（串行）执行多个任务的能力。
-// 注册一个任务， 并行执行多个任务
-// 实现从 src/assets/下所有的文件都拷贝到  dist/下面的assets
 function copy() {
+  // 注册一个任务， 并行执行多个任务
+  // 实现从 src/assets/下所有的文件都拷贝到  dist/下面的assets
   // task方法： 接受一个cb回调函数，在任务结束的时候执行以下cb回调函数。
   // 方法：可以返回一个流
   // 方法： 返回一个promise也是可以。
-  return gulp.src(['src/assets/**/*.*', 'src/lib/**/*.*'], { base: 'src/'}) // node 一个流 pipe
+  return gulp.src(['src/lib/**/*.*'], { base: 'src/'}) // node 一个流 pipe
   .pipe(gulp.dest('dist/')); // gulp.dest：把所有文件保存到xxx地方。
+}
+
+// 图片进行压缩处理的方法
+function imgMin() {
+  return gulp.src(['./src/assets/img/**/*.{jpeg,jpg,gif,ico,png,svg}'])
+    .pipe(imgagemin({
+      optimizationLevel: 5, // 类型：Number  默认：3  取值范围：0-7（优化等级）
+      progressive: true, // 类型：Boolean 默认：false 无损压缩jpg图片
+      interlaced: true,
+      // 类型：Boolean 默认：false 隔行扫描gif进行渲染
+      multipass: true // 类型：Boolean
+      // 默认：false 多次优化svg直到完全优化
+    }))
+    .pipe(gulp.dest('./dist/assets/img/'))
 }
 
 // 开发相关的任务。 
