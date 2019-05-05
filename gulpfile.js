@@ -4,6 +4,8 @@ const concat = require('gulp-concat');
 const sourcemap = require('gulp-sourcemaps');
 const autoprefixer = require('gulp-autoprefixer');
 const cleanCss = require('gulp-clean-css');
+const rev = require('gulp-rev');
+const revCollector = require('gulp-rev-collector');
 
 // 第一个参数： 任务的名字， 第二个参数是具体要执行的任务。
 gulp.task('default', function(cb) {
@@ -42,6 +44,7 @@ style.displayName = 'style:dev'; // 可以指定非函数名字的任务名
 gulp.task(style);
 
 // 生产环境使用的版本
+// 6. 给main.css文件打上版本号。
 function stylePro() {
   return gulp.src(['./src/style/**/*.{scss,css}', '!./src/style/main.css'])
     .pipe(sass().on('error', sass.logError))
@@ -55,7 +58,10 @@ function stylePro() {
       // 保留所有特殊前缀 当你用autoprefixer生成的浏览器前缀，如果不加这个参数，有可能将会删除你的部分前缀
       keepSpecialComments: '*'
     }))
-    .pipe(gulp.dest('./dist/style/'));
+    .pipe(rev()) // 给main.css生成版本的映射的文件
+    .pipe(gulp.dest('./dist/style/'))
+    .pipe(rev.manifest())
+    .pipe(gulp.dest('./src/style/')) // 把映射文件存到
 }
 gulp.task(stylePro);
 
