@@ -1,6 +1,16 @@
 {
+  "extends": "eslint:recommended",
   "rules": { 
     "semi": ["error", "always"],
-    "quotes": ["error", "single"]
+    "quotes": ["error", "single"],
+    "no-console": "off"
+  },
+  "parserOptions": {
+    "ecmaVersion": 6, 
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "node": true
   }
 }
