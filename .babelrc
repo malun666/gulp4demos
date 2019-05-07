@@ -1,0 +1,14 @@
+{
+  "presets": [
+    [
+      "@babel/env",
+      {
+        "targets": {
+          "edge": "14",
+          "chrome": "20",
+        },
+        "useBuiltIns": "usage"
+      }
+    ]
+  ]
+}

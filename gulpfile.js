@@ -10,6 +10,7 @@ const clean = require('gulp-clean');
 const htmlmin = require('gulp-htmlmin');
 const imgagemin = require('gulp-imagemin');
 const eslint = require('gulp-eslint');
+const babel = require('gulp-babel');
 
 // gulp4.0 注册一个任务的时候，直接可以把一个方法注册成为一个任务。
 function html() {
@@ -145,7 +146,9 @@ function js() {
       })
     )
     .pipe(eslint.format())
-    .pipe(eslint.failAfterError());
+    .pipe(eslint.failAfterError())
+    .pipe(babel())
+    .pipe(gulp.dest('./dist/js/'));
 }
 
 // 开发相关的任务。
