@@ -11,6 +11,7 @@ const htmlmin = require('gulp-htmlmin');
 const imgagemin = require('gulp-imagemin');
 const eslint = require('gulp-eslint');
 const babel = require('gulp-babel');
+const uglify = require('gulp-uglify');
 
 // gulp4.0 注册一个任务的时候，直接可以把一个方法注册成为一个任务。
 function html() {
@@ -22,7 +23,8 @@ function html() {
       [
         './src/index.html',
         './src/view/**/*.html',
-        './src/style/rev-manifest.json'
+        './src/style/rev-manifest.json',
+        './src/js/rev-manifest.json'
       ],
       { base: './src/' }
     )
@@ -94,7 +96,7 @@ function stylePro() {
 // 清理dist目录下的所有的css文件 和html文件
 function cleanDist() {
   return gulp
-    .src(['./dist/style/*.css', './dist/index.html', './dist/view/**/*.html'], {
+    .src(['./dist/style/*.css', './dist/index.html', './dist/view/**/*.html', './dist/js/**/*.js'], {
       read: false
     })
     .pipe(clean());
@@ -148,7 +150,12 @@ function js() {
     .pipe(eslint.format())
     .pipe(eslint.failAfterError())
     .pipe(babel())
-    .pipe(gulp.dest('./dist/js/'));
+    .pipe(uglify()) // 进行压缩代码
+    .pipe(rev())
+    .pipe(gulp.dest('./dist/js/'))
+    .pipe(rev.manifest())
+    .pipe(gulp.dest('./src/js/'));
+
 }
 
 // 开发相关的任务。
@@ -163,4 +170,4 @@ gulp.task('dev', function() {
 });
 
 // 第一个参数： 任务的名字， 第二个参数是具体要执行的任务。
-gulp.task('default', gulp.series(js));
+gulp.task('default', gulp.series(cleanDist, js));
