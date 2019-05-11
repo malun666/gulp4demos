@@ -96,8 +96,9 @@ function stylePro() {
 // 清理dist目录下的所有的css文件 和html文件
 function cleanDist() {
   return gulp
-    .src(['./dist/style/*.css', './dist/index.html', './dist/view/**/*.html', './dist/js/**/*.js'], {
-      read: false
+    .src(['dist/**/*.*'], {
+      read: false,
+      allowEmpty: true
     })
     .pipe(clean());
 }
@@ -110,7 +111,7 @@ function copy() {
   // 方法：可以返回一个流
   // 方法： 返回一个promise也是可以。
   return gulp
-    .src(['src/lib/**/*.*'], { base: 'src/' }) // node 一个流 pipe
+    .src(['src/lib/**/*.*', 'src/assets/**/*.*'], { base: 'src/' }) // node 一个流 pipe
     .pipe(gulp.dest('dist/')); // gulp.dest：把所有文件保存到xxx地方。
 }
 
@@ -155,7 +156,6 @@ function js() {
     .pipe(gulp.dest('./dist/js/'))
     .pipe(rev.manifest())
     .pipe(gulp.dest('./src/js/'));
-
 }
 
 // 开发相关的任务。
@@ -170,4 +170,4 @@ gulp.task('dev', function() {
 });
 
 // 第一个参数： 任务的名字， 第二个参数是具体要执行的任务。
-gulp.task('default', gulp.series(cleanDist, js));
+gulp.task('default', gulp.series(cleanDist, gulp.parallel(js, stylePro, imgMin), copy, html));
