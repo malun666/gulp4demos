@@ -172,12 +172,14 @@ function revjs() {
     .pipe(uglify())
     .pipe(gulp.dest('dist/'));
 }
-
+// #region 开发测试服务器
 // 配置测试服务器
 function devServer(cb) {
+  let root = process.env.mode ==="dist"? './dist' : './src';
+  let port =  process.env.mode === 'dist'? 38901 : 38900;
   connect.server({
-    root: ['./src'], // 网站根目录
-    port: 38900, // 端口
+    root: [root], // 网站根目录
+    port: port, // 端口
     livereload: true,
     middleware: function (connect, opt) {
       return [modRewrite([// 设置代理
@@ -191,10 +193,36 @@ function devServer(cb) {
 
 // 启动浏览器打开地址
 function openBrowser() {
+  let strPort =  process.env.mode === 'dist'? '38901' : '38900';
   return  gulp
   .src(__filename)
-  .pipe(open({uri: 'http://localhost:38900/index.html'}));
+  .pipe(open({uri: 'http://localhost:' + strPort +'/index.html'}));
 }
+// #endregion 开发测试服务器
+
+// #region dist测试服务器配置
+function distServer(cb) {
+  connect.server({
+    root: ['./dist'], // 网站根目录
+    port: 38901, // 端口
+    livereload: true,
+    middleware: function (connect, opt) {
+      return [modRewrite([// 设置代理
+          // http://localhost:38900/api/userlist
+  // http://localhost:4000/userlist
+          '^/api/(.*)$ http://localhost:4000/$1 [P]'])];
+    },
+  });
+  cb();
+}
+
+// 启动浏览器打开地址
+function openBrowserDist() {
+  return  gulp
+  .src(__filename)
+  .pipe(open({uri: 'http://localhost:38901/index.html'}));
+}
+// #endregion
 
 // 开发相关的任务。
 // 1. 监听sass的变化，自动编译sass
@@ -208,4 +236,4 @@ gulp.task('dev', gulp.series( devServer, openBrowser,function() {
 }));
 
 // 第一个参数： 任务的名字， 第二个参数是具体要执行的任务。
-gulp.task('default', gulp.series(cleanDist, gulp.parallel(js, stylePro, imgMin), revjs,copy, html));
+gulp.task('default', gulp.series(cleanDist, gulp.parallel(js, stylePro, imgMin), revjs,copy, html, devServer, openBrowser));
