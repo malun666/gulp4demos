@@ -1,4 +1,6 @@
 {
   "controller/about.js": "controller/about-f0385f7b28.js",
-  "index.js": "index-1bda490903.js"
+  "controller/indexController.js": "controller/indexController-6ee3553bc5.js",
+  "index.js": "index-1bda490903.js",
+  "service/api.js": "service/api-ee25aa656b.js"
 }

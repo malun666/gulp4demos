@@ -21,7 +21,7 @@ requirejs(['jquery', 'api'], function($, api) {
 
     // 控制器层，调用服务器层获取数据
     api.getUserList(null, function (data) {
-      console.log(data);
+      console.log(data); // 配合模板引擎（art-template ) + data => html标签
     });
   
     // $.ajax({

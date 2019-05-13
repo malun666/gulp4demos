@@ -11,6 +11,10 @@
   },
   "env": {
     "browser": true,
-    "node": true
+    "node": true,
+    "amd": true
+  },
+  "globals": {
+    "requirejs": "readonly"
   }
 }
