@@ -12,10 +12,10 @@ const imgagemin = require('gulp-imagemin');
 const eslint = require('gulp-eslint');
 const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
-
 const connect = require('gulp-connect');
-const modRewrite= require('connect-modrewrite');
+const modRewrite = require('connect-modrewrite');
 const open = require('gulp-open');
+
 // gulp4.0 注册一个任务的时候，直接可以把一个方法注册成为一个任务。
 function html() {
   // 接收一个回调函数作为参数，此回调函数执行后，告诉gulp当前任务执行完成。
@@ -161,17 +161,6 @@ function js() {
     .pipe(gulp.dest('./src/js/'));
 }
 
-// 开发相关的任务。
-// 1. 监听sass的变化，自动编译sass
-// 2. 自动执行打开浏览器，启动server
-// 3. 监听js变化。
-gulp.task('dev', gulp.series(devServer, openBrowser, function() {
-  gulp.watch(
-    ['./src/style/scss/**/*.scss', './src/style/css/**/*.css'],
-    gulp.series(style)
-  );
-}));
-
 // 配置测试服务器
 function devServer(cb) {
   connect.server({
@@ -180,6 +169,8 @@ function devServer(cb) {
     livereload: true,
     middleware: function (connect, opt) {
       return [modRewrite([// 设置代理
+          // http://localhost:38900/api/userlist
+  // http://localhost:4000/userlist
           '^/api/(.*)$ http://localhost:4000/$1 [P]'])];
     },
   });
@@ -192,6 +183,17 @@ function openBrowser() {
   .src(__filename)
   .pipe(open({uri: 'http://localhost:38900/index.html'}));
 }
+
+// 开发相关的任务。
+// 1. 监听sass的变化，自动编译sass
+// 2. 自动执行打开浏览器，启动server
+// 3. 监听js变化。
+gulp.task('dev', gulp.series( devServer, openBrowser,function() {
+  gulp.watch(
+    ['./src/style/scss/**/*.scss', './src/style/css/**/*.css'],
+    gulp.series(style)
+  );
+}));
 
 // 第一个参数： 任务的名字， 第二个参数是具体要执行的任务。
 gulp.task('default', gulp.series(cleanDist, gulp.parallel(js, stylePro, imgMin), copy, html));

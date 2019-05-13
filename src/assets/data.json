@@ -1,16 +1,7 @@
 {
   "userlist": [
-    {
-      "id": 1,
-      "name": "老马"
-    },
-    {
-      "id": 2,
-      "name": "老马2"
-    },
-    {
-      "id": 3,
-      "name": "老马3"
-    }
+    {"id": 1, "name": "老马 aicoder.com"},
+    {"id": 2, "name": "老马 aicoder.com 2"},
+    {"id": 3, "name": "老马 aicoder.com 3"}
   ]
 }
