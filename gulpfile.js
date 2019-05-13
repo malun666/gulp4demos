@@ -15,6 +15,7 @@ const uglify = require('gulp-uglify');
 const connect = require('gulp-connect');
 const modRewrite = require('connect-modrewrite');
 const open = require('gulp-open');
+const configRevReplace = require('gulp-requirejs-rev-replace');
 
 // gulp4.0 注册一个任务的时候，直接可以把一个方法注册成为一个任务。
 function html() {
@@ -161,6 +162,17 @@ function js() {
     .pipe(gulp.dest('./src/js/'));
 }
 
+// 给requirejs引用的文件修改版本号的路径
+function revjs() {
+  return gulp
+    .src('./dist/**/*.js')
+    .pipe(configRevReplace({
+      manifest: gulp.src('./src/js/rev-manifest.json')
+    }))
+    .pipe(uglify())
+    .pipe(gulp.dest('dist/'));
+}
+
 // 配置测试服务器
 function devServer(cb) {
   connect.server({
@@ -196,4 +208,4 @@ gulp.task('dev', gulp.series( devServer, openBrowser,function() {
 }));
 
 // 第一个参数： 任务的名字， 第二个参数是具体要执行的任务。
-gulp.task('default', gulp.series(cleanDist, gulp.parallel(js, stylePro, imgMin), copy, html));
+gulp.task('default', gulp.series(cleanDist, gulp.parallel(js, stylePro, imgMin), revjs,copy, html));
