@@ -175,11 +175,18 @@
     if (typeof define === 'function') {define(function() {return template;});} else if (typeof exports !== 'undefined') {module.exports = template;} else {this.template = template;}
     
     /*v:1*/
+template('about_ctn',function($data,$filename
+) {
+'use strict';var $utils=this,$helpers=$utils.$helpers,$escape=$utils.$escape,about=$data.about,$out='';$out+='<div>\n  ';
+$out+=$escape(about);
+$out+='\n  <input type="button" name="" id="btnOpenDialog" value="打开对话框">\n</div>';
+return new String($out);
+});/*v:1*/
 template('header',function($data,$filename
 ) {
 'use strict';var $utils=this,$helpers=$utils.$helpers,$escape=$utils.$escape,title=$data.title,$out='';$out+='<div class="header">\n  <h1> 这是头部模板</h1>\n  <h2>';
 $out+=$escape(title);
-$out+='</h2>\n</div>';
+$out+='</h2>\n  <a href="/view/about.html">关于页面</a><br>\n</div>';
 return new String($out);
 });/*v:1*/
 template('userlist',function($data,$filename
